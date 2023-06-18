@@ -11,5 +11,6 @@ export default {
     database: env.DB_NAME,
     port: 5432,
   },
-  // connection: 'postgresql://'
+  // connection:
+  //   "postgres://jatin:EjrEeYgtzC5oFxwLsiWxa8QSfg0S99Qc@dpg-ci7c6uenqql0ldart170-a.singapore-postgres.render.com/jouralmanagerdb",
 };

@@ -3,5 +3,5 @@ export interface ITeacherModel {
   hash: string;
   salt: string;
   name: string;
-  journals: [string];
+  journals: string[];
 }

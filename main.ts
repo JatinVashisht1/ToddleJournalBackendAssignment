@@ -8,6 +8,8 @@ import TeacherRouter from "./features/featureTeacher/src/routes/teacherRoutes";
 import createHttpError, { isHttpError } from "http-errors";
 import { Request, Response, NextFunction } from "express";
 import "./di/provideDependencies";
+import AuthRouter from "./features/featureAuthentication/routes/authenticationRoutes";
+import StudentRouter from "./features/featureStudent/src/routes/studentRoutes";
 
 const app = express();
 
@@ -16,6 +18,8 @@ const port = 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/teacher", TeacherRouter);
+app.use("/student", StudentRouter);
+app.use("/auth", AuthRouter);
 
 app.get("/", async (req, res, next) => {
   return res.status(200).json({ success: true });

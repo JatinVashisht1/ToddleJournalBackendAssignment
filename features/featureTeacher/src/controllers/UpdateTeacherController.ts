@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import createHttpError from "http-errors";
 import { inject, injectable } from "tsyringe";
 import { env } from "../../../../core/utils/envalidUtils";
 import { ITeacherRepository } from "../../domain/ITeacherRepository";
@@ -28,6 +29,8 @@ export class UpdateTeacherController {
       const oldRecord = await this.teacherRepository.getTeacherByUsername(
         username
       );
+
+      if (!oldRecord) throw createHttpError(404, "user not found");
       //   logger.info(`oldRecord: ${JSON.stringify(oldRecord)}`);
       if (name) {
         oldRecord.name = name;

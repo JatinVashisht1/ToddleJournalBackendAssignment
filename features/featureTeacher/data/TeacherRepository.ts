@@ -15,6 +15,7 @@ export class TeacherRepository implements ITeacherRepository {
     // await dbConnection.schema.dropTable(env.TABLE_STUDENT);
     // await dbConnection.schema.dropTable(env.TABLE_TEACHER);
     const teacher = await this.getTeacherByUsername(username);
+    if (!teacher) throw createHttpError(404, "user not found");
     const journalTitles = teacher.journals;
     const journals: IJournalModel[] = [];
 
@@ -102,14 +103,14 @@ export class TeacherRepository implements ITeacherRepository {
 
     return true;
   }
-  async getTeacherByUsername(username: string): Promise<ITeacherModel> {
+  async getTeacherByUsername(username: string): Promise<ITeacherModel | null> {
     const element = await dbConnection
       .table(env.TABLE_TEACHER)
       .where("username", "=", username)
       .select()
       .first();
 
-    if (!element) throw createHttpError(404, `username ${username} not found`);
+    if (!element) return null;
 
     const teacherModel: ITeacherModel = {
       hash: element.hash,

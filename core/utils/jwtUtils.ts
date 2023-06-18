@@ -4,7 +4,12 @@ import fs from "fs";
 import path from "path";
 import { RequestHandler } from "express";
 import createHttpError from "http-errors";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { logger } from "./winstonLogger";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const pathToPrivKey = path.join(__dirname, "..", "..", "id_rsa_priv.pem");
 const pathToPubKey = path.join(__dirname, "..", "..", "id_rsa_pub.pem");
 const PRIV_KEY = fs.readFileSync(pathToPrivKey, "utf-8");
@@ -67,14 +72,14 @@ export type jwtType = {
 
 /**
  *
- * @param {*} id - The id of user. We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @param {*} username - The username of user. We need this to set the JWT `sub` payload property to the MongoDB user ID
  * @returns js object with token and expires in fields
  */
-export function issueJWT(email: string): jwtType {
+export function issueJWT(username: string): jwtType {
   const expiresIn = "1y";
 
   const payload = {
-    sub: email,
+    sub: username,
     iat: Date.now(),
   };
 
@@ -100,6 +105,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
     const tokenParts = tokenPartsString.split(" ");
     // console.log(tokenParts)
 
+    // logger.info(`string is ${tokenPartsString}`);
     if (
       tokenParts[0] === "Bearer" &&
       tokenParts[1].match(/\S+\.\S+\.\S+/) !== null
@@ -109,15 +115,16 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
           algorithms: ["RS256"],
         });
 
-        const email = verification["sub"]?.toString() || "";
+        const username = verification["sub"]?.toString() || "";
 
         // console.log('verification is ', verification)
         req.jwt = verification;
         req.token = tokenPartsString;
+        req.body.username = username;
 
         next();
       } catch (error) {
-        // console.log(`error occured, ${error.message}`);
+        // console.log(`error occured, ${error}`);
         // return res.status(401).json({ success: false, msg: "you are not authorized to visit this route" });
         next(
           createHttpError(401, "you are not authorized to visit this route")
