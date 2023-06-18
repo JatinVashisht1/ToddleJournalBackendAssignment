@@ -5,9 +5,11 @@ const DB_PASSWORD = env.DB_PASSWORD;
 export default {
   client: "pg",
   connection: {
-    host: "localhost",
-    user: DB_NAME,
+    host: env.DB_HOSTNAME,
+    user: env.DB_USERNAME,
     password: DB_PASSWORD,
-    database: "postgres",
+    database: env.DB_NAME,
+    port: 5432,
   },
+  // connection: 'postgresql://'
 };

@@ -11,4 +11,6 @@ export const env = cleanEnv(process.env, {
   INJECT_DB: str(),
   INJECT_ITEACHER_REPOSITORY: str(),
   INJECT_ISTUDENT_REPOSITORY: str(),
+  DB_HOSTNAME: str(),
+  DB_USERNAME: str(),
 });
