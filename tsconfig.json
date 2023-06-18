@@ -72,6 +72,6 @@
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["*/*.ts", "/**/*.ts", "*.ts"],
+  "include": ["*/*.ts", "/**/*.ts", "*.ts", "core/data/IJournalModel.ts", "core/utils/envalidUtils.ts", "generateKeyPair.js"],
   "exclude": ["node_modules"]
 }
